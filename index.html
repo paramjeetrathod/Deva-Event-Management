@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deva Event - Professional Event Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white; padding: 1rem 0; position: fixed; width: 100%; top: 0; z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        nav { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        .logo { font-size: 2rem; font-weight: bold; color: #ffd700; }
+        .nav-links { display: flex; list-style: none; gap: 2rem; }
+        .nav-links a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: #ffd700; }
+        .menu-toggle { display: none; flex-direction: column; cursor: pointer; }
+        .menu-toggle span { width: 25px; height: 3px; background: white; margin: 3px 0; }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+            url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%231e3c72" width="1200" height="600"/><circle fill="%23ffd700" opacity="0.1" cx="200" cy="150" r="100"/><circle fill="%23ff6b6b" opacity="0.1" cx="800" cy="200" r="80"/><circle fill="%2343e97b" opacity="0.1" cx="1000" cy="400" r="120"/></svg>');
+            background-size: cover; height: 100vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; color: white; margin-top: 70px;
+        }
+        .hero-content h1 { font-size: 4rem; margin-bottom: 1rem; animation: fadeInUp 1s ease; }
+        .hero-content p { font-size: 1.5rem; margin-bottom: 2rem; animation: fadeInUp 1s ease 0.2s both; }
+        .cta-button {
+            display: inline-block; background: linear-gradient(45deg, #ffd700, #ffed4a); color: #333; padding: 1rem 2.5rem;
+            text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 1.2rem; transition: all 0.3s;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+        .cta-button:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255,215,0,0.4); }
+
+        /* Services */
+        .services { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: 3rem; margin-bottom: 3rem; color: #1e3c72; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .service-card {
+            background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center; transition: all 0.3s; height: 100%;
+        }
+        .service-card:hover { transform: translateY(-10px); box-shadow: 0 20px 60px rgba(0,0,0,0.15); }
+        .service-icon { font-size: 4rem; color: #ffd700; margin-bottom: 1.5rem; }
+        .service-card h3 { font-size: 1.8rem; margin-bottom: 1rem; color: #1e3c72; }
+
+        /* MAGIC GALLERY - NO RENAMING NEEDED! */
+        .gallery { padding: 5rem 2rem; background: #f8f9fa; }
+        .upload-zone {
+            border: 3px dashed #1e3c72; border-radius: 20px; padding: 3rem; text-align: center;
+            background: white; margin: 2rem auto; max-width: 600px; cursor: pointer; transition: all 0.3s;
+        }
+        .upload-zone:hover { background: #f0f8ff; border-color: #ffd700; }
+        .upload-zone.dragover { border-color: #ffd700; background: #fff8dc; transform: scale(1.02); }
+        .upload-icon { font-size: 4rem; color: #1e3c72; margin-bottom: 1rem; }
+        .upload-text { font-size: 1.5rem; color: #1e3c72; margin-bottom: 1rem; }
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
+            max-width: 1200px; margin: 3rem auto 0;
+        }
+        .photo-item {
+            height: 250px; border-radius: 15px; position: relative; overflow: hidden; cursor: pointer;
+            background-size: cover; background-position: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        .photo-item:hover { transform: scale(1.05); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .photo-label {
+            position: absolute; bottom: 0; left: 0; right: 0; background: rgba(30,60,114,0.9);
+            color: white; padding: 1rem; text-align: center; font-weight: bold; transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        .photo-item:hover .photo-label { transform: translateY(0); }
+
+        /* Contact */
+        .contact { padding: 5rem 2rem; max-width: 800px; margin: 0 auto; text-align: center; }
+        .contact h2 { font-size: 3rem; color: #1e3c72; margin-bottom: 2rem; }
+        .contact-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 3rem; }
+        .contact-item { background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .contact-item i { font-size: 2.5rem; color: #ffd700; margin-bottom: 1rem; }
+        .phone-numbers { font-size: 1.3rem; font-weight: bold; color: #1e3c72; margin-top: 0.5rem; }
+        .phone-numbers a { color: #1e3c72; text-decoration: none; display: block; margin: 0.2rem 0; }
+        .phone-numbers a:hover { color: #ffd700; }
+
+        /* Footer */
+        footer { background: #1e3c72; color: white; text-align: center; padding: 2rem; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: #1e3c72; flex-direction: column; padding: 1rem; }
+            .nav-links.active { display: flex; }
+            .menu-toggle { display: flex; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content p { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">Deva Event</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Deva Event</h1>
+            <p>Professional Event Management & Spectacular Special Effects</p>
+            <a href="#contact" class="cta-button">Book Now</a>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="services">
+        <h2 class="section-title">Our Special Effects</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-fire"></i></div>
+                <h3>Cold Fire</h3>
+                <p>Safe, mesmerizing cold fire effects for stunning visual displays!</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-smog"></i></div>
+                <h3>Paper Machine (CO2)</h3>
+                <p>Beautiful floating paper displays with dramatic CO2 effects.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-cloud"></i></div>
+                <h3>Dry Ice Smoke</h3>
+                <p>Magical ground-hugging fog perfect for entrances & performances.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon"><i class="fas fa-fan"></i></div>
+                <h3>Fan Wheel Cold Machine</h3>
+                <p>Intense cooling effects and dramatic mist displays.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAGIC GALLERY -->
+    <section id="gallery" class="gallery">
+        <h2 class="section-title">Gallery</h2>
+        
+        <!-- DRAG & DROP UPLOADER -->
+        <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+            <div class="upload-text">📸 Drag Photos Here OR Click to Upload</div>
+            <p style="color: #666; font-size: 1.1rem;">Any photos work! Auto-labeled with machine names</p>
+            <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+        </div>
+
+        <!-- PHOTOS APPEAR HERE -->
+        <div class="gallery-grid" id="photoGallery">
+            <!-- Photos will auto-appear here! -->
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <h2>Ready to Book?</h2>
+        <p>Contact us for FREE consultation!</p>
+        <div class="contact-info">
+            <div class="contact-item">
+                <i class="fas fa-phone"></i>
+                <h3>Call Now</h3>
+                <div class="phone-numbers">
+                    <a href="tel:+919309291795">📱 93092 91795</a>
+                    <a href="tel:+917620410293">📱 76204 10293</a>
+                </div>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <h3>Email</h3>
+                <p><a href="mailto:surajchavhan2341@gmail.com" style="color: #1e3c72; font-weight: bold;">surajchavhan2341@gmail.com</a></p>
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-clock"></i>
+                <h3>Service</h3>
+                <p>24/7 Available<br>Instant Response</p>
+            </div>
+        </div>
+        <a href="tel:+919309291795" class="cta-button">Call Now → 9309291795</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Deva Event | 📞 9309291795 | 7620410293 | surajchavhan2341@gmail.com</p>
+    </footer>
+
+    <script>
+        // Mobile Menu
+        function toggleMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        // MAGIC PHOTO UPLOADER
+        const fileInput = document.getElementById('fileInput');
+        const photoGallery = document.getElementById('photoGallery');
+        const uploadZone = document.querySelector('.upload-zone');
+
+        // Drag & Drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, preventDefaults, false);
+        });
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, () => uploadZone.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, () => uploadZone.classList.remove('dragover'), false);
+        });
+
+        uploadZone.addEventListener('drop', handleDrop);
+        fileInput.addEventListener('change', handleFiles);
+
+        function handleDrop(e) {
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        }
+
+        function handleFiles(files = fileInput.files) {
+            Array.from(files).forEach(previewFile);
+        }
+
+        function previewFile(file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                createPhotoItem(reader.result, file.name);
+            };
+        }
+
+        function createPhotoItem(imageSrc, fileName) {
+            const photoItem = document.createElement('div');
+            photoItem.className = 'photo-item';
+            photoItem.style.backgroundImage = `url(${imageSrc})`;
+            
+            const label = document.createElement('div');
+            label.className = 'photo-label';
+            label.textContent = getMachineName(fileName);
+            
+            photoItem.appendChild(label);
+            photoGallery.insertBefore(photoItem, photoGallery.firstChild);
+        }
+
+        // AUTO-LABEL PHOTOS (No renaming needed!)
+        function getMachineName(fileName) {
+            const name = fileName.toLowerCase();
+            if (name.includes('cold') || name.includes('fire')) return 'Cold Fire Effect';
+            if (name.includes('paper') || name.includes('co2')) return 'Paper Machine (CO2)';
+            if (name.includes('dry') || name.includes('ice') || name.includes('smoke')) return 'Dry Ice Smoke';
+            if (name.includes('fan') || name.includes('wheel')) return 'Fan Wheel Machine';
+            return 'Event Photo';
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
